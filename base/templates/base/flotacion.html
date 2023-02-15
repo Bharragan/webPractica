@@ -3,6 +3,80 @@
 
 {% block content %}
 
-<h1>{{flot.name}}</h1>
+<h1>Flotacion</h1>
+
+<body>
+    <form method="post">
+        <table>
+            <tr>
+                <td style="text-align: center">
+                Jg <br>
+                <input type="text" name="jg">
+                </td>
+                <td style="text-align: center">
+                    D32<br>
+                    <input type="text" name="d32">
+                </td>
+                <td style="text-align: center">
+                    Eg<br>
+                    <input type="text" name="eg">
+                </td>
+                <td style="text-align: center">
+                    Jl<br>
+                    <input type="text" name="jl">
+                </td>
+                <td style="text-align: center">
+                    Diametro Columna<br>
+                    <input type="text" name="dcolumna">
+                </td>
+                <td style="text-align: center">
+                    Densidad Pulpa<br>
+                    <input type="text" name="dpulpa">
+                </td>
+                <td style="text-align: center">
+                    Densidad Burbuja<br>
+                    <input type="text" name="dburbuja">
+                </td>
+                <td style="text-align: center">
+                    Viscosidad<br>
+                    <input type="text" name="viscosidad">
+                </td>
+                <td style="text-align: center">
+                    Espumante<br>
+                    <input type="text" name="espumante">
+                </td>
+                <td style="text-align: center">
+                    Ppm<br>
+                    <input type="text" name="ppm">
+                </td>
+            </tr>
+        </table>
+        <br><br>
+            
+                    <label for="cars">Escoge un espumante:</label>
+                    <select name="froth" id="froth">
+                        <option value="DOW">DOW</option>
+                        <option value="TEB">TEB</option>
+                        <option value="MIBC">MIBC</option>
+                        <option value="F140">F140</option>
+                        <option value="F150">F150</option>
+                        <option value="F160-05">F160-05</option>
+                        <option value="F160-10">F160-10</option>
+                        <option value="F160-13">F160-13</option>
+                        <option value="F173">F173</option>
+                    </select>
+        <br><br>
+  <input type="submit" value="Predecir">
+  <br><br>
+    </form>
+    <form method="post">
+        <table>
+            <label for="myfile">Seleccione un archivo:</label>
+  <input type="file" id="myfile" name="myfile"><br><br>
+  <input type="submit" value="Predecir">
+        </table>
+    </form>
+
+</body>
 
 {% endblock content%}
