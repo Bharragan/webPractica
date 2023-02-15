@@ -1,0 +1,28 @@
+{% extends 'main.html' %}
+
+
+{% block content %}
+
+<h1>Home Template</h1>
+
+<div>  
+    <div>
+
+        {% for flot in flots %}
+            <div>
+                <h5>{{flot.id}} -- <a href="{% url 'flotacion' flot.id %}">{{flot.name}}</a></h5>
+            </div>
+
+        {% endfor %}
+
+        {% for lix in lixs %}
+        <div>
+            <h5>{{lix.id}} -- <a href="{% url 'lixiviacion' lix.id %}">{{lix.name}}</a></h5>
+        </div>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock content %}
