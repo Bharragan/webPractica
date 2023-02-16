@@ -7,13 +7,11 @@
 
 <div>  
     <div>
-
-        {% for flot in flots %}
-            <div>
-                <h5>{{flot.id}} -- <a href="{% url 'flotacion' flot.id %}">{{flot.name}}</a></h5>
-            </div>
-
-        {% endfor %}
+        <div>
+            <h5>
+                1 -- <a href="{% url 'flotacion' %}">Proceso de flotacion</a>
+            </h5>
+        </div>
 
         {% for lix in lixs %}
         <div>
