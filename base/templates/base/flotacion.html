@@ -1,72 +1,41 @@
-{% extends 'main.html' %}
-{% block content %}
+{% extends 'main.html' %} {% block content %}
 <h1>Flotacion</h1>
-<body>
-   <form method="post">
-      {% csrf_token %}
-      <table>
-         <tr>
-            <td style="text-align: center">
-               Jg <br>
-               <input type="text" name="jg">
-            </td>
-            <td style="text-align: center">
-               D32<br>
-               <input type="text" name="d32">
-            </td>
-            <td style="text-align: center">
-               Eg<br>
-               <input type="text" name="eg">
-            </td>
-            <td style="text-align: center">
-               Jl<br>
-               <input type="text" name="jl">
-            </td>
-            <td style="text-align: center">
-               Diametro Columna<br>
-               <input type="text" name="dcolumna">
-            </td>
-            <td style="text-align: center">
-               Densidad Pulpa<br>
-               <input type="text" name="dpulpa">
-            </td>
-            <td style="text-align: center">
-               Densidad Burbuja<br>
-               <input type="text" name="dburbuja">
-            </td>
-            <td style="text-align: center">
-               Viscosidad<br>
-               <input type="text" name="viscosidad">
-            </td>
-            <td style="text-align: center">
-               Ppm<br>
-               <input type="text" name="ppm">
-            </td>
-         </tr>
-      </table>
-      <br><br>
-      <label for="cars">Escoge un espumante:</label>
-      <select name="froth" id="froth">
-         <option value="DOW">DOW</option>
-         <option value="TEB">TEB</option>
-         <option value="MIBC">MIBC</option>
-         <option value="F140">F140</option>
-         <option value="F150">F150</option>
-         <option value="F160-05">F160-05</option>
-         <option value="F160-10">F160-10</option>
-         <option value="F160-13">F160-13</option>
-         <option value="F173">F173</option>
-      </select>
-      <br><br>
-      <input type="submit" value="Predecir">
-      <br><br>
-   </form>
-   <form method="post">
-      <table>
-         <label for="myfile">Seleccione un archivo:</label>
-         <input type="file" id="myfile" name="myfile"><br><br>
-         <input type="submit" value="Predecir">
-      </table>
-   </form>
-</body>
+<form method="post" novalidate>
+   {% csrf_token %}
+ 
+   {{ form.non_field_errors }}
+ 
+   {% for hidden_field in form.hidden_fields %}
+     {{ hidden_field.errors }}
+     {{ hidden_field }}
+   {% endfor %}
+ 
+   <table border="1">
+     {% for field in form.visible_fields %}
+       <tr>
+         <th>{{ field.label_tag }}</th>
+         <td>
+           {{ field.errors }}
+           {{ field }}
+           {{ field.help_text }}
+         </td>
+       </tr>
+     {% endfor %}
+   </table>
+ 
+   <button type="submit" name="submit_input">Predecir</button>
+ </form>
+<hr />
+
+<form method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+  {{ excelForm.as_p }}
+  <button type="submit" name="submit_excel" >Predecir</button>
+</form>
+<hr />
+<form action="/export_excel">
+    <button id="stat=btn" class="btn">Descargar Plantilla Excel</button>
+</form>
+
+
 {% endblock content%}
