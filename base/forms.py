@@ -27,5 +27,5 @@ class FlotationForm(forms.Form):
     ppm = forms.FloatField()
 
 class excelFlotationForm(forms.Form):
-    archivo = forms.FileField()
+    archivo = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["xlsx"])])
     #validators=[FileExtensionValidator(allowed_extensions=["pdf"])]

@@ -30,7 +30,7 @@ def flot(request):
     form = forms.FlotationForm()
     excelForm = forms.excelFlotationForm()
     if request.method == 'GET':
-            render(request, 'base/flotacion.html' ,{'form': form})
+            render(request, 'base/flotacion.html' ,{'form': form, 'excelForm':excelForm})
     elif request.method == 'POST':
         if 'submit_input' in request.POST:
             form = forms.FlotationForm(request.POST)
@@ -39,9 +39,10 @@ def flot(request):
                     data.append(value)
                 context = {'data':randomForestPrediction(data)}
                 return render(request,'base/flotationResult.html',context)
-        else:
-            print("pa")
-
+        elif 'submit_excel' in request.POST:
+            excelForm = forms.excelFlotationForm(request.POST, request.FILES)
+            print(excelForm.is_valid())
+            #TODO: obtener datos del excel
     return render(request, 'base/flotacion.html', {'form': form, 'excelForm':excelForm})
 
 #TODO: Crear excel con respectivos nombres
