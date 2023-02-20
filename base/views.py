@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import csv
+import pandas
+import numpy as np
 from . import forms
 # Create your views here.
 
@@ -41,17 +43,21 @@ def flot(request):
                 return render(request,'base/flotationResult.html',context)
         elif 'submit_excel' in request.POST:
             excelForm = forms.excelFlotationForm(request.POST, request.FILES)
-            print(excelForm.is_valid())
-            #TODO: obtener datos del excel
+            try:
+                excel_data_df = pandas.read_excel(request.FILES['archivo'], sheet_name='Hoja1', usecols=['Jg', 'D32_medido','Eg','Jl','Dcolumna','Densidad pulpa','Densidad burbuja','Viscosidad','Espumante','ppm'])
+                
+                for i in range(10):
+                    if np.isnan(excel_data_df.iat[0,i]):
+                        return render(request, 'base/flotacion.html', {'excelError':'Excel con valores nulos','form': form, 'excelForm':excelForm})
+                for i in range(10):
+                    data.append(excel_data_df.iat[0, i])
+                context = {'data':randomForestPrediction(data)}
+                return render(request,'base/flotationResult.html',context)
+            except:
+                excelForm = forms.excelFlotationForm()
+                return render(request, 'base/flotacion.html', {'excelError':'Excel Invalido o no seleccionado','form': form, 'excelForm':excelForm})
     return render(request, 'base/flotacion.html', {'form': form, 'excelForm':excelForm})
 
-#TODO: Crear excel con respectivos nombres
-def downloadFlotation(request):
-    response = HttpResponse(content_type='text/csv')
-    writer = csv.writer(response)
-    writer.writerow(['X1','X2','X3','X4','X5','X6','X7','X8','X9','X10'])
-    response['Content-Disposition']='attachment; filename="flotExample.csv"'
-    return response
 
 def lix(request, pk):
 

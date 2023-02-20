@@ -29,13 +29,15 @@
 
 <form method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
+    {{ excelError }}
   {{ excelForm.as_p }}
   <button type="submit" name="submit_excel" >Predecir</button>
 </form>
 <hr />
-<form action="/export_excel">
-    <button id="stat=btn" class="btn">Descargar Plantilla Excel</button>
-</form>
+
+{% load static %} <!-- In top-->
+
+<a href="{% static "\PlantillaParaFlotacion.xlsx" %}" alt="My image">Descargar Plantilla De Prueba</a>
 
 
 {% endblock content%}

@@ -1,4 +1,7 @@
 from django import forms
+import pandas
+import numpy as np
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 #De esta forma lo que se muestra sera el nombre del espumante y lo que se guardara es el valor numerico del mismo
 
@@ -27,5 +30,5 @@ class FlotationForm(forms.Form):
     ppm = forms.FloatField()
 
 class excelFlotationForm(forms.Form):
-    archivo = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["xlsx"])])
+    archivo = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["xlsx"])] , required=True)
     #validators=[FileExtensionValidator(allowed_extensions=["pdf"])]
