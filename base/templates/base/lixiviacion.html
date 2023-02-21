@@ -32,69 +32,15 @@
 
             <form methos="post" enctype="multipart/form-data" novalidate>
                 {% csrf_token %}
+                {{excelError}}
                 {{ excelForm.as_p }}
                 <button type="submit" name="submit_excel"> Predecir </button>
             </form>
             
             <hr />
             
-            <form action="/export_excel">
-                <button id="stat=btn" class="btn">Descargar Plantilla Excel</button>
-            </form>
+            {% load static %}
+
+            <a href="{% static "\PlantillaParaLixiviacion.xlsx" %}" alt="My image"> Descargar Plantilla De Prueba </a>
 
             {% endblock content%}
-            <!--
-                <td style="text-align: center">
-                Granulometría<br>
-                <input type="text" name="Granulometría"> 
-                </td>
-                <td style="text-align: center">
-                    Ratio de irrigacion<br>
-                    <input type="text" name="Ratio de irrigación" class="form-control">
-                </td>
-                <td style="text-align: center">
-                    Acido total anadido<br>
-                    <input type="text" name="Ácido total añadido">
-                </td>
-                <td style="text-align: center">
-                    Altura de la pila<br>
-                    <input type="text" name="Altura de la pila">
-                </td>
-                <td style="text-align: center">
-                    Ley Cu Total <br>
-                    <input type="text" name="Ley Cu Total">
-                </td>
-                <td style="text-align: center">
-                    Ley CO3<br>
-                    <input type="text" name="Ley CO3">
-                </td>
-                <td style="text-align: center">
-                    Ratio de Lixiviado<br>
-                    <input type="text" name="RL">
-                </td>
-                <td style="text-align: center">
-                    Días de operación<br>
-                    <input type="text" name="dias operacion">
-                </td>
-                <td style="text-align: center">
-                    Cu Soluble <br>
-                    <input type="text" name="Cu soluble">
-                </td>
-            </tr>
-        </table>
-        <button type="submit">Predecir</button>
-
-        <br><br>
-    </form>
-    <form method="post">
-        <table>
-            <label for="myfile">Seleccione un archivo:</label>
-  <input type="file" id="myfile" name="myfile"><br><br>
-
-  <button><a href="/lixiviacion/1">Enviar</a></button>
-        </table>
-    </form>
-
-</body>
-
--->  
