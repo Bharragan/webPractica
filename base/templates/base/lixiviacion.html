@@ -1,8 +1,47 @@
 {% extends 'main.html' %}
 
+{% load widget_tweaks %}
 
 {% block content %}
 
 <h1>{{lix.name}}</h1>
 
-{% endblock content%}
+<body>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field.erros }}
+            {{ hidden_field }}
+        {% endfor %}
+
+        <table border="1">
+            {% for field in form.visible_fields %}
+            <tr>
+                <th>{{ field.label_tag }}</th>
+                <td>
+                    {{ field.errors }}
+                    {{ field }}
+                    {{ field.help.text }}
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
+            <button type="submit" name="submit_input">Predecir</button>
+            </form>
+            <hr/>
+
+            <form methos="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                {{excelError}}
+                {{ excelForm.as_p }}
+                <button type="submit" name="submit_excel"> Predecir </button>
+            </form>
+            
+            <hr />
+            
+            {% load static %}
+
+            <a href="{% static "\PlantillaParaLixiviacion.xlsx" %}" alt="My image"> Descargar Plantilla De Prueba </a>
+
+            {% endblock content%}
