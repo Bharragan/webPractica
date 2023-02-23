@@ -137,7 +137,7 @@ def randomForestLix(datos):
 
         if (datos[7] < 40):
             if(datos[6] < 2.032):
-                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube x7 en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar x7 en " + str(2.604 - (2.032 + (2.032 - datos[6]))) + " unidades \n" 
+                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube x7 en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar x7 en " + str(2.604 - (2.032 + (datos[6] - 2.032))) + " unidades \n" 
 
 
         if(datos[7] > 73.500):
