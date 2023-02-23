@@ -1,3 +1,11 @@
+{% load static %}
+
+{% load bootstrap4 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% load widget_tweaks %}
+{% bootstrap_messages %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,9 +18,11 @@
     <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
     <script src='main.js'></script>
     -->
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'ucnLogo.ico' %}">
 </head>
 
 <body>
+
 
     {% include 'navbar.html' %}
 

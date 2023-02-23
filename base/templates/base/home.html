@@ -3,26 +3,24 @@
 
 {% block content %}
 
-<h1>Home Template</h1>
 
-<div>  
-    <div>
-
-        {% for flot in flots %}
-            <div>
-                <h5>{{flot.id}} -- <a href="{% url 'flotacion' flot.id %}">{{flot.name}}</a></h5>
-            </div>
-
-        {% endfor %}
-
-        {% for lix in lixs %}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            <h5>
+                1 -- <a href="{% url 'flotacion' %}">Proceso de flotacion</a>
+            </h5>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+            {% for lix in lixs %}
         <div>
             <h5>{{lix.id}} -- <a href="{% url 'lixiviacion' lix.id %}">{{lix.name}}</a></h5>
         </div>
 
         {% endfor %}
-
+        </div>
     </div>
+
 </div>
 
 {% endblock content %}
