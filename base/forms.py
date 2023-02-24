@@ -32,16 +32,16 @@ espumantes = (
 )
 
 class FlotationForm(forms.Form):
-    jg = forms.FloatField()
-    d32 = forms.FloatField()
-    eg = forms.FloatField()
-    jl = forms.FloatField()
-    diámetro_Columna = forms.FloatField()
-    densidad_Pulpa = forms.FloatField()
-    densidad_Burbuja = forms.FloatField()
-    viscosidad = forms.FloatField()
+    jg = forms.FloatField(min_value=0.1, max_value=3)
+    d32 = forms.FloatField(min_value=0.2, max_value=5)
+    eg = forms.FloatField(min_value=2, max_value=30)
+    jl = forms.FloatField(min_value=0, max_value=2)
+    diámetro_Columna = forms.FloatField(min_value=3, max_value=50)
+    densidad_Pulpa = forms.FloatField(min_value=0.9, max_value=1.2)
+    densidad_Burbuja = forms.FloatField(min_value=0.0009, max_value=0.0015)
+    viscosidad = forms.FloatField(min_value=0.0008, max_value=0.002)
     espumante = forms.ChoiceField(choices=espumantes)
-    ppm = forms.FloatField()
+    ppm = forms.FloatField(min_value=2, max_value=150)
 
 class excelFlotationForm(forms.Form):
     archivo = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["xlsx"])] , required=True)
