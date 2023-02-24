@@ -36,7 +36,7 @@ class FlotationForm(forms.Form):
     d32 = forms.FloatField()
     eg = forms.FloatField()
     jl = forms.FloatField()
-    diametro_Columna = forms.FloatField()
+    diámetro_Columna = forms.FloatField()
     densidad_Pulpa = forms.FloatField()
     densidad_Burbuja = forms.FloatField()
     viscosidad = forms.FloatField()
