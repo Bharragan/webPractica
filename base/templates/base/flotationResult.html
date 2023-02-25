@@ -1,9 +1,29 @@
 {% extends 'main.html' %}
 {% block content %}
-<h1>Flotacion</h1>
 <body>
-    <p>Prediccion</p>
-    <p>{{data}}</p>
-    
+   <div class="card text-center">
+      <div class="card-header">
+                <h1 class="text-center">Resultados Flotacion</h1>
+      </div>
+      <div class="card-body">
+         {% for i in inc %}
+         <div class="p-3 mb-2 bg-success text-white">
+            <p class="card-text">{{ i }}</p>
+         </div>
+         {% endfor %}
+         {% for i in keep %}
+         <div class="p-3 mb-2 bg-info text-white">
+            <p class="card-text">{{ i }}</p>
+         </div>
+         {% endfor %}
+         {% for i in dec %}
+         <div class="p-3 mb-2 bg-danger text-white">
+            <p class="card-text">{{ i }}</p>
+         </div>
+         {% endfor %}
+      </div>
+      <h5><a href="/" class="row justify-content-center">Regresar al inicio</a></h5>
+   </div>
+   </div>
 </body>
 {% endblock content%}

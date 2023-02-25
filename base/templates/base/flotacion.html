@@ -50,7 +50,7 @@
    <div class="col-md-4 mb-4">
       <div class="card mb-4">
          <div class="card-header py-3">
-            <h5 class="mb-0">Ingreso Con excel</h5>
+            <h5 class="mb-0">Ingreso Con Excel</h5>
          </div>
          <div class="card-body">
             <form method="post" enctype="multipart/form-data" novalidate>
@@ -62,9 +62,12 @@
                </div>
             </form>
             {% load static %}
-            <a href="{% static "\PlantillaParaFlotacion.xlsx" %}" alt="My image">Descargar Plantilla De Prueba</a> {% endblock content%}
+            <a href="{% static "\PlantillaParaFlotacion.xlsx" %}" alt="My image">Descargar Plantilla De Prueba</a> 
 
          </div>
+         
       </div>
+      <h5><a href="/" class="row justify-content-center">Regresar al inicio</a></h5>
    </div>
 </div>
+{% endblock content%}

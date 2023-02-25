@@ -60,7 +60,7 @@ def flot(request):
 
 
 
-def lix(request, pk):
+def lix(request):
     datos=[]
     form = forms.FormLixiviacion()
     excelForm = forms.excelFormLixiviacion
@@ -120,25 +120,32 @@ def randomForestLix(datos):
         elif(datos[7] < 73.500):
             if(datos[6] < 2.604):
                 recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta X7 en: " + str(2.604 - datos[6]) + " unidades al llegar al día 74. \n"
-            if(datos[6] > 4.370):
+            elif(datos[6] > 4.370):
                 recomendacion += "Se puede bajar X7 un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades al llegar al día 74. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, solo hay que esperar al día 74 y la recuperación empezará a ser alta"
     else:
         if(datos[7] < 73.500 and datos[7] > 40):
             if(datos[6] < 2.032):
-                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos X7 en " + str(2.032 - datos[6]) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar x7 en " + str(2.604 - (2.032 + (2.032 - datos[6]))) + " unidades \n"
-            if(datos[6] > 2.032 and datos[6] < 2.604): 
+                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos X7 en " + str(2.032 - datos[6]) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar x7 en " + str(2.604 - datos[6]) + " unidades \n"
+            elif(datos[6] > 2.032 and datos[6] < 2.604): 
                 recomendacion += "Con estas características se obtendrán valores medios, lo ideal es que cuando se esté llegando al día 74 se aumente x7 en " + str(2.604 - datos[6]) + " y llegar hasta un máximo de 4.370 de x7 \n"
-            if(datos[6] > 2.604 and datos[6] < 4.370): 
+            elif(datos[6] > 2.604 and datos[6] < 4.370): 
                 recomendacion += "Con estas características se podría perder mucho ácido, la pila está en días de recuperación media, sería mejor bajar el valor un " + str(datos[6] - 2.604) + " unidades y retomar ese nivel de x7 en el día 74 de operación. \n"
             else:
                 recomendacion += "Con estas características lo mejor sería bajar x7 un " + str(datos[6] - 2.604) + " unidades"
 
         if (datos[7] < 40):
             if(datos[6] < 2.032):
-                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube x7 en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar x7 en " + str(2.604 - (2.032 + (datos[6] - 2.032))) + " unidades \n" 
-
+                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube x7 en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar x7 en " + str(2.604 - datos[6]) + " unidades \n" 
+            elif(datos[6] > 2.032 and datos[6] < 2.604):
+                recomendacion += "Lo ideal sería bajar x7 un " + str(datos[6] - 2.032) + " hasta el día 40, a partir del día 40 devolver el valor a como estaba inicialmente y se obtendrá una recuperación media, luego al día 74 hay que mantener el valor de x7 por sobre " + str(2.604 - datos[6]) + " respecto al valor inicial"
+            elif(datos[6] == 2.032):
+                recomendación += "Mantener este valor hasta el día 74, luego aumentarlo en " + str(2.604 - datos[6])
+            elif(datos[6] > 4.370):
+                recomendacion += "Bajar el valor de x7 en " + str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta sería bajar el valor en " + str(datos[6] - 4.370) + " respecto al valor inicial"
+            else:
+                recomendacion += "Bajar el valor de x7 en " +str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta lo ideal sería bajar el valor de x7 en " + str(datos[6] - 3.5) + " respecto al valor inicial"
 
         if(datos[7] > 73.500):
             if(datos[6] < 2.604):
@@ -155,38 +162,57 @@ def flotation_prediction(request):
 
 def randomForestPrediction(data):
     recomendacion = ""
+    recDict = {"inc":[],"dec":[],"keep":[],"k":"kappa"}
     #Bloque X1
     if(data[0] < 0.748):
-        recomendacion += "Aumentar el valor de X1 en " + str(0.748 - data[0]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Jg en " + str(0.748 - data[0]) + " unidades.")
+        recomendacion += "Aumentar el valor de Jg en " + str(0.748 - data[0]) + " unidades. \n"
     else:
-        recomendacion += "Mantener este valor de X1 para una recuperacion alta.\n"
-
+        recDict['keep'].append("Mantener este valor de Jg para una recuperacion alta.")
+        recomendacion += "Mantener este valor de Jg para una recuperacion alta.\n"
     #Bloque X2
     if(data[1] >= 1.016 and data[1] <= 1.307):
-        recomendacion += "Mantener este valor de X2 para una recomendacion alta.\n"
+        recDict['keep'].append("Mantener este valor de D32 para una recomendacion alta.")
+        recomendacion += "Mantener este valor de D32 para una recomendacion alta.\n"
     elif(data[1] > 0.669 and data[1] < 1.016):
-        recomendacion += "Aumentar el valor de X2 en " + str(1.016 - data[1]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. ")
+        recomendacion += "Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. \n"
     else:
         if(data[1]>1.307):
-            recomendacion += "Disminuir el valor de X2 en" + str(data[1]-1.307) + " unidades. \n"
+            recDict['dec'].append("Disminuir el valor de D32 en" + str(data[1]-1.307) + " unidades.")
+            recomendacion += "Disminuir el valor de D32 en" + str(data[1]-1.307) + " unidades. \n"
         else:
-            recomendacion += "Aumentar el valor de X2 en " + str(1.016 - data[1]) + " unidades. \n"
+            recDict['inc'].append("Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades.")
+            recomendacion += "Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. \n"
 
     #Bloque X3
     if(data[2] >= 12.045):
-        recomendacion += "Mantener este valor de X3 para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Eg para una recuperacion alta.")
+        recomendacion += "Mantener este valor de Eg para una recuperacion alta. \n"
     else:
-        recomendacion += "Aumentar el valor de X3 en " + str(12.045 - data[2]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Eg en " + str(12.045 - data[2]) + " unidades.")
+        recomendacion += "Aumentar el valor de Eg en " + str(12.045 - data[2]) + " unidades. \n"
 
     #Bloque X4
     if(data[3] >= 0.935):
-        recomendacion += "Mantener este valor de X4 para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Jl para una recuperacion alta.")
+        recomendacion += "Mantener este valor de Jl para una recuperacion alta. \n"
     else:
-        recomendacion += "Aumentar el valor de X4 en" + str(0.935 - data[3]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Jl en" + str(0.935 - data[3]) + " unidades.")
+        recomendacion += "Aumentar el valor de Jl en" + str(0.935 - data[3]) + " unidades. \n"
+
+    if(data[8] in [5,8,3,2]):
+        recDict['keep'].append("Este espumante a resultado en recuperaciones altas se recomienda continuar con su uso.")
+        recomendacion += "Este espumante a resultado en recuperaciones altas se recomienda continuar con su uso \n"
+    else:
+        recDict['inc'].append("Se recomienda cambiar el espumante a uno de los siguientes: F150, F160-13, MIBC, TEB.")
+        recomendacion += "Se recomienda cambiar el espumante a uno de los siguientes: F150, F160-13, MIBC, TEB"
 
     #Bloque X10
     if(data[9] >= 12.500):
-        recomendacion += "Mantener este valor de X10 para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Ppm para una recuperacion alta.")
+        recomendacion += "Mantener este valor de Ppm para una recuperacion alta. \n"
     else:
-        recomendacion += "Aumentar el valor de X10 en " + str(12.5-data[9]) + " unidades. \n"
-    return recomendacion
+        recDict['inc'].append("Aumentar el valor de Ppm en " + str(12.5-data[9]) + " unidades.")
+        recomendacion += "Aumentar el valor de Ppm en " + str(12.5-data[9]) + " unidades. \n"
+    return 

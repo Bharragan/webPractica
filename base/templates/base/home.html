@@ -1,26 +1,22 @@
 {% extends 'main.html' %}
-
-
 {% block content %}
-
+{% load static %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            <h5>
-                1 -- <a href="{% url 'flotacion' %}">Proceso de flotacion</a>
-            </h5>
-        </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-            {% for lix in lixs %}
-        <div>
-            <h5>{{lix.id}} -- <a href="{% url 'lixiviacion' lix.id %}">{{lix.name}}</a></h5>
-        </div>
-
-        {% endfor %}
-        </div>
-    </div>
-
+   <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+         <h5><a href="{% url 'flotacion' %}" class="row justify-content-center">Proceso de Flotación</a></h5>
+            <a href="{% url 'flotacion' %}"><img src="{% static '\img\Flotacion.jpg' %} " class="img-fluid" ></a>
+      </div>
+      
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+         <h5><a href="{% url 'lixiviacion'  %}" class="row justify-content-center">Proceso de Lixiviación</a></h5>
+         <a href="{% url 'lixiviacion' %}"><img src="{% static '\img\lixiv.png' %}  " class="img-fluid" ></a>
+      </div>
+   </div>
 </div>
-
+<br>
+<div class="container">
+    <h3 class="text-center">Bienvenido al sistema de mejoramiento operacional, por favor selecciona el proceso a optimizar.</h3>
+</div>
 {% endblock content %}
