@@ -94,12 +94,6 @@ def lix(request):
 
     return render(request, 'base/lixiviacion.html', {'form': form, 'excelForm': excelForm})
 
-def downloadLix(request):
-    response = HttpResponse(content_type='text/csv')
-    writer = csv.writer(response)
-    writer.writerow(['X1','X2','X3','X4','X5','X6','X7','X8','X9'])
-    response['Content-Disposition']='attachment; filename="LixExample.csv"'
-    return response
 
 def lix_Prediction(request):
     
