@@ -47,14 +47,14 @@ def flot(request):
                 
                 for i in range(10):
                     if np.isnan(excel_data_df.iat[0,i]):
-                        return render(request, 'base/flotacion.html', {'excelError':'Excel con valores nulos','form': form, 'excelForm':excelForm})
+                        return render(request, 'base/flotacion.html', {'excelError':'Excel con valores nulos.','form': form, 'excelForm':excelForm})
                 for i in range(10):
                     data.append(excel_data_df.iat[0, i])
                 context = randomForestPrediction(data)
                 return render(request,'base/flotationResult.html',context)
             except:
                 excelForm = forms.excelFlotationForm()
-                return render(request, 'base/flotacion.html', {'excelError':'Excel Invalido o no seleccionado','form': form, 'excelForm':excelForm})
+                return render(request, 'base/flotacion.html', {'excelError':'Excel Inválido o no seleccionado.','form': form, 'excelForm':excelForm})
     return render(request, 'base/flotacion.html', {'form': form, 'excelForm':excelForm})
 
 
