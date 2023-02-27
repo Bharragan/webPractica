@@ -3,6 +3,7 @@ from django.core.validators import FileExtensionValidator
 import pandas
 import numpy as np
 from django.core.exceptions import ValidationError
+
 class FormLixiviacion(forms.Form):
     Granulometria = forms.FloatField()
     Ratio_Irrigacion = forms.FloatField()
@@ -17,8 +18,7 @@ class FormLixiviacion(forms.Form):
 class excelFormLixiviacion(forms.Form):
     archivo = forms.FileField(validators = [FileExtensionValidator(allowed_extensions=["xlsx"])])
     
-#De esta forma lo que se muestra sera el nombre del espumante y lo que se guardara es el valor numerico del mismo
-
+#Diccionario para mostrar los nombres de los espumantes, de esta forma se muestra el nombre del mismo y se guarda como variable su valor
 espumantes = (
     (1, "DOW"),
     (2, "TEB"),
@@ -32,7 +32,7 @@ espumantes = (
 )
 
 class FlotationForm(forms.Form):
-    jg = forms.FloatField(min_value=0.1, max_value=3)
+    jg = forms.FloatField(min_value=0.1, max_value=3)               #Variable de tipo Float con valor minimo 0.1  y valor maximo 3, corresponde a la variable JG
     d32 = forms.FloatField(min_value=0.2, max_value=5)
     eg = forms.FloatField(min_value=2, max_value=30)
     jl = forms.FloatField(min_value=0, max_value=2)
@@ -40,9 +40,9 @@ class FlotationForm(forms.Form):
     densidad_Pulpa = forms.FloatField(min_value=0.9, max_value=1.2)
     densidad_Burbuja = forms.FloatField(min_value=0.0009, max_value=0.0015)
     viscosidad = forms.FloatField(min_value=0.0008, max_value=0.002)
-    espumante = forms.ChoiceField(choices=espumantes)
+    espumante = forms.ChoiceField(choices=espumantes)               #Variable contenedora de la seleccion de espumante, sus posibles valores corresponden al diccionario espumantes
     ppm = forms.FloatField(min_value=2, max_value=150)
 
+#Formulario para archivo excel, verifica que el archivo exista y que cumpla con el tipo XLSX
 class excelFlotationForm(forms.Form):
     archivo = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["xlsx"])] , required=True)
-    #validators=[FileExtensionValidator(allowed_extensions=["pdf"])]

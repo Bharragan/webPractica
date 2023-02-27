@@ -27,22 +27,23 @@ def home(request):
     return render(request, 'base/home.html', context)
 
 def flot(request):
-    data=[]
-    form = forms.FlotationForm()
+    data=[]     #Inicializa un array donde iran las variables operacionales
+    form = forms.FlotationForm()        #Se crean formularios vacios en caso de cargar la pagina por primera vez
     excelForm = forms.excelFlotationForm()
     if request.method == 'GET':
-            render(request, 'base/flotacion.html' ,{'form': form, 'excelForm':excelForm})
-    elif request.method == 'POST':
-        if 'submit_input' in request.POST:
-            form = forms.FlotationForm(request.POST)
+            render(request, 'base/flotacion.html' ,{'form': form, 'excelForm':excelForm}) #Si el metodo es GET se renderiza la pagina de forma normal
+    elif request.method == 'POST':  
+        if 'submit_input' in request.POST:      #Si el metodo es POST y el boton seleccionado contiene el nombre submit input entonces se asume que el formulario es el de ingreso manual
+            form = forms.FlotationForm(request.POST)        #Se validan los datos obtenidos desde el formulario
             if form.is_valid():
                 for key, value in form.cleaned_data.items():
-                    data.append(value)
-                context = randomForestPrediction(data)
-                return render(request,'base/flotationResult.html',context)
-        elif 'submit_excel' in request.POST:
+                    data.append(value)                          #Se agregan los valores obtenidos del formulario al array de valores
+                context = randomForestPrediction(data)          
+                return render(request,'base/flotationResult.html',context)          #Se redirecciona a la vista resultados en conjunto de los datos obtenidos del analisis
+        elif 'submit_excel' in request.POST:    #Si el metodo es POST y el boton contiene el nombre submit_excel se asuem que el formulario es de ingreso por archivo
             excelForm = forms.excelFlotationForm(request.POST, request.FILES)
             try:
+                #Se intenta leer y obtener los datos desde excel , en caso de fallar se retorna un error.
                 excel_data_df = pandas.read_excel(request.FILES['archivo'], sheet_name='Hoja1', usecols=['Jg', 'D32_medido','Eg','Jl','Dcolumna','Densidad pulpa','Densidad burbuja','Viscosidad','Espumante','ppm'])
                 
                 for i in range(10):
@@ -93,13 +94,6 @@ def lix(request):
                 return render(request, 'base/lixiviacion.html', {'excelError': 'Excel inválido o no seleccionado', 'form': form, 'excelForm': excelForm})
 
     return render(request, 'base/lixiviacion.html', {'form': form, 'excelForm': excelForm})
-
-def downloadLix(request):
-    response = HttpResponse(content_type='text/csv')
-    writer = csv.writer(response)
-    writer.writerow(['X1','X2','X3','X4','X5','X6','X7','X8','X9'])
-    response['Content-Disposition']='attachment; filename="LixExample.csv"'
-    return response
 
 def lix_Prediction(request):
     
@@ -152,9 +146,10 @@ def randomForestLix(datos):
 def flotation_prediction(request):
 
     return render(request,'base/flotationResult')
-
+#Metodo para crear recomendaciones en base a valores obtenidos en forma de array como parametro.
+#Retorna un diccionario de arrays donde se tienen las recomendaciones separadas por categoria
 def randomForestPrediction(data):
-    recDict = {"inc":[],"dec":[],"keep":[],"k":"kappa"}
+    recDict = {"inc":[],"dec":[],"keep":[]}
     #Bloque X1
     if(data[0] < 0.748):
         recDict['inc'].append("Aumentar el valor de Jg en " + str(round((0.748 - data[0]),4)) + " unidades.")
