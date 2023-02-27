@@ -154,58 +154,43 @@ def flotation_prediction(request):
     return render(request,'base/flotationResult')
 
 def randomForestPrediction(data):
-    recomendacion = ""
     recDict = {"inc":[],"dec":[],"keep":[],"k":"kappa"}
     #Bloque X1
     if(data[0] < 0.748):
-        recDict['inc'].append("Aumentar el valor de Jg en " + str(0.748 - data[0]) + " unidades.")
-        recomendacion += "Aumentar el valor de Jg en " + str(0.748 - data[0]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Jg en " + str(round((0.748 - data[0]),4)) + " unidades.")
     else:
-        recDict['keep'].append("Mantener este valor de Jg para una recuperacion alta.")
-        recomendacion += "Mantener este valor de Jg para una recuperacion alta.\n"
+        recDict['keep'].append("Mantener este valor de Jg para una recuperación alta.")
     #Bloque X2
     if(data[1] >= 1.016 and data[1] <= 1.307):
-        recDict['keep'].append("Mantener este valor de D32 para una recomendacion alta.")
-        recomendacion += "Mantener este valor de D32 para una recomendacion alta.\n"
+        recDict['keep'].append("Mantener este valor de D32 para una recomendación alta.")
     elif(data[1] > 0.669 and data[1] < 1.016):
-        recDict['inc'].append("Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. ")
-        recomendacion += "Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de D32 en " + str(round((1.016 - data[1]),4)) + " unidades. ")
     else:
         if(data[1]>1.307):
-            recDict['dec'].append("Disminuir el valor de D32 en" + str(data[1]-1.307) + " unidades.")
-            recomendacion += "Disminuir el valor de D32 en" + str(data[1]-1.307) + " unidades. \n"
+            recDict['dec'].append("Disminuir el valor de D32 en " + str(round((data[1]-1.307),4)) + " unidades.")
         else:
-            recDict['inc'].append("Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades.")
-            recomendacion += "Aumentar el valor de D32 en " + str(1.016 - data[1]) + " unidades. \n"
+            recDict['inc'].append("Aumentar el valor de D32 en " + str(round((1.016 - data[1]),4)) + " unidades.")
 
     #Bloque X3
     if(data[2] >= 12.045):
-        recDict['keep'].append("Mantener este valor de Eg para una recuperacion alta.")
-        recomendacion += "Mantener este valor de Eg para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Eg para una recuperación alta.")
     else:
-        recDict['inc'].append("Aumentar el valor de Eg en " + str(12.045 - data[2]) + " unidades.")
-        recomendacion += "Aumentar el valor de Eg en " + str(12.045 - data[2]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Eg en " + str(round((12.045 - data[2]),4)) + " unidades.")
 
     #Bloque X4
     if(data[3] >= 0.935):
-        recDict['keep'].append("Mantener este valor de Jl para una recuperacion alta.")
-        recomendacion += "Mantener este valor de Jl para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Jl para una recuperación alta.")
     else:
-        recDict['inc'].append("Aumentar el valor de Jl en" + str(0.935 - data[3]) + " unidades.")
-        recomendacion += "Aumentar el valor de Jl en" + str(0.935 - data[3]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Jl en" + str(round((0.935 - data[3]),4)) + " unidades.")
 
     if(data[8] in [5,8,3,2]):
-        recDict['keep'].append("Este espumante a resultado en recuperaciones altas se recomienda continuar con su uso.")
-        recomendacion += "Este espumante a resultado en recuperaciones altas se recomienda continuar con su uso \n"
+        recDict['keep'].append("Este espumante ha resultado en recuperaciones altas, se recomienda continuar con su uso.")
     else:
         recDict['inc'].append("Se recomienda cambiar el espumante a uno de los siguientes: F150, F160-13, MIBC, TEB.")
-        recomendacion += "Se recomienda cambiar el espumante a uno de los siguientes: F150, F160-13, MIBC, TEB"
 
     #Bloque X10
     if(data[9] >= 12.500):
-        recDict['keep'].append("Mantener este valor de Ppm para una recuperacion alta.")
-        recomendacion += "Mantener este valor de Ppm para una recuperacion alta. \n"
+        recDict['keep'].append("Mantener este valor de Ppm para una recuperación alta.")
     else:
-        recDict['inc'].append("Aumentar el valor de Ppm en " + str(12.5-data[9]) + " unidades.")
-        recomendacion += "Aumentar el valor de Ppm en " + str(12.5-data[9]) + " unidades. \n"
+        recDict['inc'].append("Aumentar el valor de Ppm en " + str(round((12.5-data[9]),4)) + " unidades.")
     return recDict
