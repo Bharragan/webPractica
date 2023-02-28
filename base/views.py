@@ -105,47 +105,47 @@ def randomForestLix(datos):
     if(datos[0] > 13.250 and datos[0] < 13.866):
         if(datos[7] > 73.500):
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta X7 en: " + str(2.604 - datos[6]) + " unidades. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar X7 un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, la pila va en camino a una recuperacion alta."
         
         elif(datos[7] < 73.500):
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta X7 en: " + str(2.604 - datos[6]) + " unidades al llegar al día 74. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades al llegar al día 74. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar X7 un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades al llegar al día 74. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades al llegar al día 74. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, solo hay que esperar al día 74 y la recuperación empezará a ser alta"
     else:
         if(datos[7] < 73.500 and datos[7] > 40):
             if(datos[6] < 2.032):
-                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos X7 en " + str(2.032 - datos[6]) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar x7 en " + str(2.604 - datos[6]) + " unidades \n"
+                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos la proporción de lixiviado en " + str(2.032 - datos[6]) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(2.604 - datos[6]) + " unidades \n"
             elif(datos[6] > 2.032 and datos[6] < 2.604): 
-                recomendacion += "Con estas características se obtendrán valores medios, lo ideal es que cuando se esté llegando al día 74 se aumente x7 en " + str(2.604 - datos[6]) + " y llegar hasta un máximo de 4.370 de x7 \n"
+                recomendacion += "Con estas características se obtendrán valores medios, lo ideal es que cuando se esté llegando al día 74 se aumente la proporción de lixiviado en " + str(2.604 - datos[6]) + " y llegar hasta un máximo de 4.370 de la proporción de lixiviado \n"
             elif(datos[6] > 2.604 and datos[6] < 4.370): 
-                recomendacion += "Con estas características se podría perder mucho ácido, la pila está en días de recuperación media, sería mejor bajar el valor un " + str(datos[6] - 2.604) + " unidades y retomar ese nivel de x7 en el día 74 de operación. \n"
+                recomendacion += "Con estas características se podría perder mucho ácido, la pila está en días de recuperación media, sería mejor bajar el valor un " + str(datos[6] - 2.604) + " unidades y retomar ese nivel de la proporción de lixiviado en el día 74 de operación. \n"
             else:
-                recomendacion += "Con estas características lo mejor sería bajar x7 un " + str(datos[6] - 2.604) + " unidades"
+                recomendacion += "Con estas características lo mejor sería bajar la proporción de lixiviado un " + str(datos[6] - 2.604) + " unidades"
 
         elif (datos[7] < 40):
             if(datos[6] < 2.032):
-                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube x7 en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar x7 en " + str(2.604 - datos[6]) + " unidades \n" 
+                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube la proporción de lixiviado en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(2.604 - datos[6]) + " unidades \n" 
             elif(datos[6] > 2.032 and datos[6] < 2.604):
-                recomendacion += "Lo ideal sería bajar x7 un " + str(datos[6] - 2.032) + " hasta el día 40, a partir del día 40 devolver el valor a como estaba inicialmente y se obtendrá una recuperación media, luego al día 74 hay que mantener el valor de x7 por sobre " + str(2.604 - datos[6]) + " respecto al valor inicial"
+                recomendacion += "Lo ideal sería bajar proporción de lixiviado un " + str(datos[6] - 2.032) + " hasta el día 40, a partir del día 40 devolver el valor a como estaba inicialmente y se obtendrá una recuperación media, luego al día 74 hay que mantener el valor de la proporción de lixiviado por sobre " + str(2.604 - datos[6]) + " respecto al valor inicial"
             elif(datos[6] == 2.032):
                 recomendación += "Mantener este valor hasta el día 74, luego aumentarlo en " + str(2.604 - datos[6])
             elif(datos[6] > 4.370):
-                recomendacion += "Bajar el valor de x7 en " + str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta sería bajar el valor en " + str(datos[6] - 4.370) + " respecto al valor inicial"
+                recomendacion += "Bajar el valor de la proporción de lixiviado en " + str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta sería bajar el valor en " + str(datos[6] - 4.370) + " respecto al valor inicial"
             else:
-                recomendacion += "Bajar el valor de x7 en " +str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta lo ideal sería bajar el valor de x7 en " + str(datos[6] - 3.5) + " respecto al valor inicial"
+                recomendacion += "Bajar el valor de la proporción de lixiviado en " +str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta lo ideal sería bajar el valor de la proporción de lixiviado en " + str(datos[6] - 3.5) + " respecto al valor inicial"
 
         else:
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta X7 en: " + str(2.604 - datos[6]) + " unidades. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar X7 un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, la pila va en camino a una recuperacion alta."
     return recomendacion
