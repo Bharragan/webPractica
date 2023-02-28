@@ -62,6 +62,11 @@ def flot(request):
 
 def lix(request):
     datos=[]
+    rangos={
+        'value':[0,1,2,3,4,5,6,7,8],
+        'min':[5,5,2,1,0.5,0.1,0,1,50],
+        'max':[20,20,30,5,2,10,5,150,90],
+    }
     form = forms.FormLixiviacion()
     excelForm = forms.excelFormLixiviacion()
     
@@ -82,54 +87,15 @@ def lix(request):
             try:
                 datosExcelDf = pandas.read_excel(request.FILES['archivo'], sheet_name = 'Hoja1', usecols =['Granulometria','RatioIrrigacion','AcidoTotalAñadido', 'AlturaPila', 'LeyCuTotal', 'LeyCO3', 'RatioLixiviado', 'DiasOperacion', 'CuSoluble'])
                 for i in range(9):
-                    print(datosExcelDf.iat[0,i])
                     if np.isnan(datosExcelDf.iat[0,i]):
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores nulos','form': form, 'excelForm':excelForm})
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores inválidos o nulos'})
                 for i in range(9):
-                    if(i == 0 and datosExcelDf.iat[0,i] >= 5 and datosExcelDf.iat[0,i] <= 20):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de granulometría está fuera de rango', 'form': form, 'excelForm': excelForm})
-                    if(i == 1 and datosExcelDf.iat[0,i] >= 5 and datosExcelDf.iat[0,i] <= 20):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la tasa de riego está fuera de rango', 'form': form, 'excelForm': excelForm})
 
-                    if(i == 2 and datosExcelDf.iat[0,i] >= 2 and datosExcelDf.iat[0,i] <= 30):
+                    if(datosExcelDf.iat[0,i] >= rangos['min'][i] and datosExcelDf.iat[0,i] <= rangos['max'][i]):
                         datos.append(datosExcelDf.iat[0,i])
                     else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de el ácido total añadido está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 3 and datosExcelDf.iat[0,i] >= 1 and datosExcelDf.iat[0,i] <= 5):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la altura de la pila está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 4 and datosExcelDf.iat[0,i] >= 0.5 and datosExcelDf.iat[0,i] <= 2):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del grado total de cobre (Ley Cu Total) está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 5 and datosExcelDf.iat[0,i] >= 0.1 and datosExcelDf.iat[0,i] <= 10):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del carbonato está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 6 and datosExcelDf.iat[0,i] >= 0 and datosExcelDf.iat[0,i] <= 5):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la proporción de lixiviación está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 7 and datosExcelDf.iat[0,i] >= 1):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de los días de operación está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
-                    if(i == 8 and datosExcelDf.iat[0,i] >= 50 and datosExcelDf.iat[0,i] <= 90):
-                        datos.append(datosExcelDf.iat[0,i])
-                    else:
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del grado de cobre soluble apilado está fuera de rango', 'form': form, 'excelForm': excelForm})
-                        
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'Uno de los valores está fuera de rango', 'form': form, 'excelForm': excelForm})
+                
                 context = {'datos': randomForestLix(datos)}
                 return render(request, 'base/lixResult.html', context)
             except:
