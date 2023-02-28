@@ -82,10 +82,54 @@ def lix(request):
             try:
                 datosExcelDf = pandas.read_excel(request.FILES['archivo'], sheet_name = 'Hoja1', usecols =['Granulometria','RatioIrrigacion','AcidoTotalAñadido', 'AlturaPila', 'LeyCuTotal', 'LeyCO3', 'RatioLixiviado', 'DiasOperacion', 'CuSoluble'])
                 for i in range(9):
+                    print(datosExcelDf.iat[0,i])
                     if np.isnan(datosExcelDf.iat[0,i]):
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores'})
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores nulos','form': form, 'excelForm':excelForm})
                 for i in range(9):
-                    datos.append(datosExcelDf.iat[0,i])
+                    if(i == 0 and datosExcelDf.iat[0,i] >= 5 and datosExcelDf.iat[0,i] <= 20):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de granulometría está fuera de rango', 'form': form, 'excelForm': excelForm})
+                    if(i == 1 and datosExcelDf.iat[0,i] >= 5 and datosExcelDf.iat[0,i] <= 20):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la tasa de riego está fuera de rango', 'form': form, 'excelForm': excelForm})
+
+                    if(i == 2 and datosExcelDf.iat[0,i] >= 2 and datosExcelDf.iat[0,i] <= 30):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de el ácido total añadido está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 3 and datosExcelDf.iat[0,i] >= 1 and datosExcelDf.iat[0,i] <= 5):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la altura de la pila está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 4 and datosExcelDf.iat[0,i] >= 0.5 and datosExcelDf.iat[0,i] <= 2):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del grado total de cobre (Ley Cu Total) está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 5 and datosExcelDf.iat[0,i] >= 0.1 and datosExcelDf.iat[0,i] <= 10):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del carbonato está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 6 and datosExcelDf.iat[0,i] >= 0 and datosExcelDf.iat[0,i] <= 5):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de la proporción de lixiviación está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 7 and datosExcelDf.iat[0,i] >= 1):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor de los días de operación está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
+                    if(i == 8 and datosExcelDf.iat[0,i] >= 50 and datosExcelDf.iat[0,i] <= 90):
+                        datos.append(datosExcelDf.iat[0,i])
+                    else:
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'El valor del grado de cobre soluble apilado está fuera de rango', 'form': form, 'excelForm': excelForm})
+                        
                 context = {'datos': randomForestLix(datos)}
                 return render(request, 'base/lixResult.html', context)
             except:
@@ -103,49 +147,49 @@ def randomForestLix(datos):
     recomendacion = ""
 
     if(datos[0] > 13.250 and datos[0] < 13.866):
-        if(datos[7] > 73.500):
+        if(datos[7] >= 73.500):
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(round(2.604 - datos[6], 3)) + " unidades. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(round(datos[6] - 4.370, 3)) + " unidades. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, la pila va en camino a una recuperacion alta."
         
         elif(datos[7] < 73.500):
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades al llegar al día 74. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(round(2.604 - datos[6], 3)) + " unidades al llegar al día 74. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades al llegar al día 74. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(round(datos[6] - 4.370, 3)) + " unidades al llegar al día 74. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, solo hay que esperar al día 74 y la recuperación empezará a ser alta"
     else:
-        if(datos[7] < 73.500 and datos[7] > 40):
+        if(datos[7] < 73.500 and datos[7] >= 40):
             if(datos[6] < 2.032):
-                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos la proporción de lixiviado en " + str(2.032 - datos[6]) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(2.604 - datos[6]) + " unidades \n"
+                recomendacion += "Es complicado tener recuperaciones altas debido a los pocos días de operación, pero si aumentamos la proporción de lixiviado en " + str(round(2.032 - datos[6], 3)) + " unidades se tendrá una recuperacion media y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(round(2.604 - datos[6], 3)) + " unidades \n"
             elif(datos[6] > 2.032 and datos[6] < 2.604): 
-                recomendacion += "Con estas características se obtendrán valores medios, lo ideal es que cuando se esté llegando al día 74 se aumente la proporción de lixiviado en " + str(2.604 - datos[6]) + " y llegar hasta un máximo de 4.370 de la proporción de lixiviado \n"
+                recomendacion += "Con estas características se obtendrán valores medios, lo ideal es que cuando se esté llegando al día 74 se aumente la proporción de lixiviado en " + str(round(2.604 - datos[6], 3)) + " y llegar hasta un máximo de 4.370 de la proporción de lixiviado \n"
             elif(datos[6] > 2.604 and datos[6] < 4.370): 
-                recomendacion += "Con estas características se podría perder mucho ácido, la pila está en días de recuperación media, sería mejor bajar el valor un " + str(datos[6] - 2.604) + " unidades y retomar ese nivel de la proporción de lixiviado en el día 74 de operación. \n"
+                recomendacion += "Con estas características se podría perder mucho ácido, la pila está en días de recuperación media, sería mejor bajar el valor un " + str(round(datos[6] - 2.604, 3)) + " unidades y retomar ese nivel de la proporción de lixiviado en el día 74 de operación. \n"
             else:
-                recomendacion += "Con estas características lo mejor sería bajar la proporción de lixiviado un " + str(datos[6] - 2.604) + " unidades"
+                recomendacion += "Con estas características lo mejor sería bajar la proporción de lixiviado un " + str(round(datos[6] - 2.604, 3)) + " unidades"
 
         elif (datos[7] < 40):
             if(datos[6] < 2.032):
-                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube la proporción de lixiviado en: " + str(2.032 - datos[6]) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(2.604 - datos[6]) + " unidades \n" 
+                recomendacion += "Con estos valores se tendrá una recuperación baja, si sube la proporción de lixiviado en: " + str(round(2.032 - datos[6], 3)) + " unidades obtendrá una recuperación media después al día 40 de operación y a partir del día 74 hay que aumentar la proporción de lixiviado en " + str(round(2.604 - datos[6], 3)) + " unidades \n" 
             elif(datos[6] > 2.032 and datos[6] < 2.604):
-                recomendacion += "Lo ideal sería bajar proporción de lixiviado un " + str(datos[6] - 2.032) + " hasta el día 40, a partir del día 40 devolver el valor a como estaba inicialmente y se obtendrá una recuperación media, luego al día 74 hay que mantener el valor de la proporción de lixiviado por sobre " + str(2.604 - datos[6]) + " respecto al valor inicial"
+                recomendacion += "Lo ideal sería bajar proporción de lixiviado un " + str(round(datos[6] - 2.032, 3)) + " hasta el día 40, a partir del día 40 devolver el valor a como estaba inicialmente y se obtendrá una recuperación media, luego al día 74 hay que mantener el valor de la proporción de lixiviado por sobre " + str(round(2.604 - datos[6], 3)) + " respecto al valor inicial"
             elif(datos[6] == 2.032):
-                recomendación += "Mantener este valor hasta el día 74, luego aumentarlo en " + str(2.604 - datos[6])
+                recomendación += "Mantener este valor hasta el día 74, luego aumentarlo en " + str(round(2.604 - datos[6], 3))
             elif(datos[6] > 4.370):
-                recomendacion += "Bajar el valor de la proporción de lixiviado en " + str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta sería bajar el valor en " + str(datos[6] - 4.370) + " respecto al valor inicial"
+                recomendacion += "Bajar el valor de la proporción de lixiviado en " + str(round(datos[6] - 2.032, 3)) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta sería bajar el valor en " + str(round(datos[6] - 4.370, 3)) + " respecto al valor inicial"
             else:
-                recomendacion += "Bajar el valor de la proporción de lixiviado en " +str(datos[6] - 2.032) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta lo ideal sería bajar el valor de la proporción de lixiviado en " + str(datos[6] - 3.5) + " respecto al valor inicial"
+                recomendacion += "Bajar el valor de la proporción de lixiviado en " +str(round(datos[6] - 2.032, 3)) + " para los días previos al 74, luego en el día 74 lo ideal para una recuperación alta lo ideal sería bajar el valor de la proporción de lixiviado en " + str(round(datos[6] - 3.5, 3)) + " respecto al valor inicial"
 
         else:
             if(datos[6] < 2.604):
-                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(2.604 - datos[6]) + " unidades. \n"
+                recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(round(2.604 - datos[6], 3)) + " unidades. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(datos[6] - 4.370) + " unidades. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(round(datos[6] - 4.370, 3)) + " unidades. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, la pila va en camino a una recuperacion alta."
     return recomendacion

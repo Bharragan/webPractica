@@ -5,7 +5,7 @@ import numpy as np
 from django.core.exceptions import ValidationError
 class FormLixiviacion(forms.Form):
     Granulometría = forms.FloatField(min_value=5, max_value=20)
-    Ratio_Irrigación = forms.FloatField(min_value=5,max_value=20)
+    Tasa_de_Riego = forms.FloatField(min_value=5,max_value=20)
     Ácido_Total_Añadido = forms.FloatField(min_value=2, max_value=30)
     Altura_Pila = forms.FloatField(min_value=1,max_value=5)
     Ley_Cu_Total = forms.FloatField(min_value=0.5,max_value=2)
