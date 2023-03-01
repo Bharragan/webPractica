@@ -1,5 +1,5 @@
 {% extends 'main.html' %} {% block content %} {% load widget_tweaks %}
-<h1>Flotacion</h1>
+<h1>Flotación</h1>
 <br>
 <div class="row">
    <div class="col-md-8 mb-4">
@@ -56,7 +56,9 @@
             <form method="post" enctype="multipart/form-data" novalidate>
                <div class="form-group">
                   {% csrf_token %}
-                  {{ excelError }}
+                  {% if excelError %}
+                  <div class="alert alert-danger" role="alert">{{ excelError }}</div>
+                  {% endif %}
                   {{ excelForm.as_p }}
                   <button type="submit"  class="btn btn-primary" name="submit_excel">Predecir</button>
                </div>
