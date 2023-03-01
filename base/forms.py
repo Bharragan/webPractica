@@ -3,18 +3,18 @@ from django.core.validators import FileExtensionValidator
 import pandas
 import numpy as np
 from django.core.exceptions import ValidationError
+class FormLixiviacion(forms.Form):#AFormulario de las variables con sus condiciones de valores mínimos y máximos
+    Granulometría = forms.FloatField(min_value=5, max_value=20)
+    Tasa_de_Riego = forms.FloatField(min_value=5,max_value=20)
+    Ácido_Total_Añadido = forms.FloatField(min_value=2, max_value=30)
+    Altura_Pila = forms.FloatField(min_value=1,max_value=5)
+    Ley_Cu_Total = forms.FloatField(min_value=0.5,max_value=2)
+    Ley_CO3 = forms.FloatField(min_value=0.1, max_value=10)
+    Ratio_Lixiviado = forms.FloatField(min_value=0, max_value=5)
+    Dias_Operación = forms.FloatField(min_value=1)
+    Cu_Soluble = forms.FloatField(min_value=50, max_value=90)
 
-class FormLixiviacion(forms.Form):
-    Granulometria = forms.FloatField()
-    Ratio_Irrigacion = forms.FloatField()
-    Acido_Total_Añadido = forms.FloatField()
-    Altura_Pila = forms.FloatField()
-    Ley_Cu_Total = forms.FloatField()
-    Ley_CO3 = forms.FloatField()
-    Ratio_Lixiviado = forms.FloatField()
-    Dias_Operacion = forms.FloatField()
-    Cu_Soluble = forms.FloatField()
-
+#Formulario para el archivo tipo excel, solo acepta archivos tipo "xlsx"
 class excelFormLixiviacion(forms.Form):
     archivo = forms.FileField(validators = [FileExtensionValidator(allowed_extensions=["xlsx"])])
     

@@ -1,47 +1,81 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} 
+
+{% block content %} 
 
 {% load widget_tweaks %}
 
-{% block content %}
+<h1>Lixiviación</h1>
 
-<h1>{{lix.name}}</h1>
+<br>
 
-<body>
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        {% for hidden_field in form.hidden_fields %}
-            {{ hidden_field.erros }}
-            {{ hidden_field }}
-        {% endfor %}
-
-        <table border="1">
-            {% for field in form.visible_fields %}
-            <tr>
-                <th>{{ field.label_tag }}</th>
-                <td>
-                    {{ field.errors }}
-                    {{ field }}
-                    {{ field.help.text }}
-                </td>
-            </tr>
-            {% endfor %}
-            </table>
-            <button type="submit" name="submit_input">Predecir</button>
+<div class="row">
+   <div class="col-md-8 mb-4">
+      <div class="card mb-4">
+         <div class="card-header py-3">
+            <h5 class="mb-0">Ingreso Manual</h5>
+         </div>
+         <div class="card-body">
+            <form method="post" novalidate>
+               {% csrf_token %}
+               {% for hidden_field in form.hidden_fields %}
+               {{ hidden_field }}
+               {% endfor %}
+               {% if form.non_field_errors %}
+               <div class="alert alert-danger" role="alert">
+                  {% for error in form.non_field_errors %}
+                  {{ error }}
+                  {% endfor %}
+               </div>
+               {% endif %}
+               {% for field in form.visible_fields %}
+               <div class="form-group">
+                  {{ field.label_tag }}
+                  {% if form.is_bound %}
+                  {% if field.errors %}
+                  {% render_field field class="form-control is-invalid" %}
+                  {% for error in field.errors %}
+                  <div class="invalid-feedback">
+                     {{ error }}
+                  </div>
+                  {% endfor %}
+                  {% else %}
+                  {% render_field field class="form-control is-valid" %}
+                  {% endif %}
+                  {% else %}
+                  {% render_field field class="form-control" %}
+                  {% endif %}
+                  {% if field.help_text %}
+                  <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+               </div>
+               {% endfor %}
+               <br>
+               <button type="submit" class="btn btn-primary" name="submit_input">Predecir</button>
             </form>
-            <hr/>
-
-            <form methos="post" enctype="multipart/form-data" novalidate>
-                {% csrf_token %}
-                {{excelError}}
-                {{ excelForm.as_p }}
-                <button type="submit" name="submit_excel"> Predecir </button>
+         </div>
+      </div>
+   </div>
+   <div class="col-md-4 mb-4">
+      <div class="card mb-4">
+         <div class="card-header py-3">
+            <h5 class="mb-0">Ingreso Con excel</h5>
+         </div>
+         <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate>
+               <div class="form-group">
+                  {% csrf_token %}
+                  {% if excelError %}
+                  <div class="alert alert-danger" role="alert">{{ excelError }}</div>
+                  {% endif %}
+                  {{ excelForm.as_p }}
+                  <button type="submit"  class="btn btn-primary" name="submit_excel">Predecir</button>
+               </div>
             </form>
-            
-            <hr />
-            
             {% load static %}
-
-            <a href="{% static "\PlantillaParaLixiviacion.xlsx" %}" alt="My image"> Descargar Plantilla De Prueba </a>
-
-            {% endblock content%}
+            <a href="{% static "\PlantillaParaLixiviacion.xlsx" %}" alt="Plantilla Excel Lixiviación"> Descargar Plantilla De Prueba </a>
+         </div>
+      </div>
+      <h5><a href="/" class="row justify-content-center">Regresar al inicio</a></h5>
+   </div>
+</div>
+{% endblock content %}

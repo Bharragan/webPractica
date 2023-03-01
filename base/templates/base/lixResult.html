@@ -1,8 +1,18 @@
 {% extends 'main.html' %}
 {% block content %}
-<h1>Lixiviacion</h1>
 <body>
-    <p>Prediccion</p>
-    <p>{{datos}}</p>
+    <div class="mx-auto" style="width: 1000px;">
+        <div class="mx-auto" style="width: 200px;"><h1>Lixiviación</h1></div>
+
+    <div class="card text-white bg-success mb-3" style="max-width: 70rem">
+        <div class="card-header">Predicción</div>
+        <div class="card-body">
+          <p class="card-text">{{datos}}</p>
+            </div>
+        </div>
+        </div>
+            <h5><a href="/" class="row justify-content-center">Regresar al inicio</a></h5>
+        </div>
+    </div>
 </body>
 {% endblock content %}
