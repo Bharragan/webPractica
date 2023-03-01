@@ -14,12 +14,12 @@ lixs = [
     {'id':1, 'name':'Proceso de lixiviacion'},
 ]
 
-"""
-procesos = [
-    {'id':1, 'name':'Proceso de Flotación'},
-    {'id':2, 'name':'Proceso de Lixiviación'},
-]
-"""
+rangosFlotacion = {
+    "value":[0,1,2,3,4,5,6,7,8,9],
+    "min":[0.1,0.2,2,0,3,0.90,0.0009,0.0008,0,2],
+    "max":[3,5,30,2,50,1.2,0.0015,0.002,11,150]
+}
+
 
 def home(request):
     context =  {'flots': flots, 'lixs':lixs}
@@ -50,6 +50,8 @@ def flot(request):
                     if np.isnan(excel_data_df.iat[0,i]):
                         return render(request, 'base/flotacion.html', {'excelError':'Excel con valores nulos.','form': form, 'excelForm':excelForm})
                 for i in range(10):
+                    if excel_data_df.iat[0, i]>rangosFlotacion['max'][i] or excel_data_df.iat[0, i]<rangosFlotacion['min'][i]:
+                        return render(request,'base/flotacion.html', {'excelError':'Excel con valores fuera de rango.','form': form, 'excelForm':excelForm})
                     data.append(excel_data_df.iat[0, i])
                 context = randomForestPrediction(data)
                 return render(request,'base/flotationResult.html',context)
