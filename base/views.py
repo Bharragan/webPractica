@@ -105,8 +105,6 @@ def lix_Prediction(request):
     
     return render(request, 'base/lixResult.html')
 
-def randomForestLix(datos):
-    recomendacion = ""
 """
 El sistema de recomendación de lixiviación funciona de tal forma que en base a algunas características dentro de la pila
 se tendrán recuperaciones bajas, altas o medias, las pilas de lixiviación si bien tienen bastantes variables (9) muchas de 
@@ -122,7 +120,8 @@ datos[0] = granulometría
 datos[6] = proporción de lixiviado
 datos[7] = días de operación
 """
-
+def randomForestLix(datos):
+    recomendacion = ""
     if(datos[0] > 13.250 and datos[0] < 13.866):
         if(datos[7] >= 73.500):
             if(datos[6] < 2.604):
