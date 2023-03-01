@@ -14,16 +14,9 @@ lixs = [
     {'id':1, 'name':'Proceso de lixiviacion'},
 ]
 
-"""
-procesos = [
-    {'id':1, 'name':'Proceso de Flotación'},
-    {'id':2, 'name':'Proceso de Lixiviación'},
-]
-"""
 
 def home(request):
     context =  {'flots': flots, 'lixs':lixs}
-    #context = {'procesos', proceso}
     return render(request, 'base/home.html', context)
 
 def flot(request):
@@ -61,39 +54,42 @@ def flot(request):
 
 
 def lix(request):
-    datos=[]
-    rangos={
-        'value':[0,1,2,3,4,5,6,7,8],
-        'min':[5,5,2,1,0.5,0.1,0,1,50],
-        'max':[20,20,30,5,2,10,5,150,90],
+    datos=[]    #Arreglo en donde se guardarán las variables a utilizar
+    rangos={    #Diccionario con los rangos para validación con el Excel
+        'value':[0,1,2,3,4,5,6,7,8],    #aquí estan las posiciones de las variables (0 es granulometría y sus valores min y max son 5 y 20 respectivamente)
+        'min':[5,5,2,1,0.5,0.1,0,1,50],     #valores minimos de las variables
+        'max':[20,20,30,5,2,10,5,150,90],    #valores máximos de las variables
     }
-    form = forms.FormLixiviacion()
-    excelForm = forms.excelFormLixiviacion()
+    form = forms.FormLixiviacion()  #Creación de un formulario vacío 
+    excelForm = forms.excelFormLixiviacion()     #creación de un formulario de excel vacío 
     
-    if request.method == 'GET':
+    if request.method == 'GET':     #si el método es un 'GET' esto va a mostrar la página de forma normal con formularios vacíos
         render(request, 'base/lixiviacion.html', {'form': form, 'excelForm': excelForm})
     
-    elif request.method == 'POST':
+    elif request.method == 'POST':      #si el método es un 'POST' y hay un 'submit_input' esto indica que se ingresaron datos por teclado
         if 'submit_input' in request.POST:
-            form = forms.FormLixiviacion(request.POST)
-            if form.is_valid():
+            form = forms.FormLixiviacion(request.POST)      #Aquí se hacen las validaciones de min y max que estén en el método FomrLixiviacion dentro de forms.py
+            if form.is_valid():     #Si se cumplieron las condiciones
                 for key, value in form.cleaned_data.items():
-                    datos.append(value)
-                context = {'datos':randomForestLix(datos)}
+                    datos.append(value)     #se agregan los valores al arreglo de variables 'datos' creado al inicio del método
+                context = {'datos':randomForestLix(datos)}   
                 return render(request, 'base/lixResult.html', context)
-        elif 'submit_excel' in request.POST:
+        elif 'submit_excel' in request.POST:    #si el método 'POST' tiene un 'submit_excel' esto indica que se ingresaron datos por el excel
             excelForm = forms.excelFormLixiviacion(request.POST, request.FILES)
             
             try:
+                #Se leen los valores del excel y se guardan en un df, si por algún motivo no se puede leer, se retorna un error.
                 datosExcelDf = pandas.read_excel(request.FILES['archivo'], sheet_name = 'Hoja1', usecols =['Granulometria','RatioIrrigacion','AcidoTotalAñadido', 'AlturaPila', 'LeyCuTotal', 'LeyCO3', 'RatioLixiviado', 'DiasOperacion', 'CuSoluble'])
+                #Este for verifica que no hayan valores nulos
                 for i in range(9):
                     if np.isnan(datosExcelDf.iat[0,i]):
-                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores inválidos o nulos'})
+                        return render(request, 'base/lixiviacion.html', {'excelError': 'Excel con valores inválidos o nulos', 'form': form, 'excelForm': excelForm})
+                #Este for hace uso del diccionario para verificar que el excel cumpla con los rangos.
                 for i in range(9):
-
                     if(datosExcelDf.iat[0,i] >= rangos['min'][i] and datosExcelDf.iat[0,i] <= rangos['max'][i]):
                         datos.append(datosExcelDf.iat[0,i])
                     else:
+                        #Si no se cumple estas validaciones se recarga la página mmostrando un mensaje de error
                         return render(request, 'base/lixiviacion.html', {'excelError': 'Uno de los valores está fuera de rango', 'form': form, 'excelForm': excelForm})
                 
                 context = {'datos': randomForestLix(datos)}
@@ -111,13 +107,28 @@ def lix_Prediction(request):
 
 def randomForestLix(datos):
     recomendacion = ""
+"""
+El sistema de recomendación de lixiviación funciona de tal forma que en base a algunas características dentro de la pila
+se tendrán recuperaciones bajas, altas o medias, las pilas de lixiviación si bien tienen bastantes variables (9) muchas de 
+estas no se pueden modificar y hay que aceptar que tienen ese valor, y si llegan a cambiar es por algo que está un poco fuera
+de nuestro control, la granulometría, la altura de la pila, el carbonato, la ley de cobre total no se pueden cambiar, las dosis
+de ácido que circula por la pila y el añadido como extra si se pueden, pero esto crea la proporción de lixiviado, por ende las 
+recomendaciones están sujetas a ver bajo que condiciones renta tener un rango de esta proporción de lixiviado al ser el único
+valor real que se puede modificar y que afecta en gran medida. 
+
+Las variables que afectan y que están siendo consideradas son las que más peso tienen en la predicción y son las siguientes:
+
+datos[0] = granulometría
+datos[6] = proporción de lixiviado
+datos[7] = días de operación
+"""
 
     if(datos[0] > 13.250 and datos[0] < 13.866):
         if(datos[7] >= 73.500):
             if(datos[6] < 2.604):
                 recomendacion += "Según estos datos se puede alcanzar valores de recolección alta si se aumenta la proporción de lixiviado en: " + str(round(2.604 - datos[6], 3)) + " unidades. \n"
             elif(datos[6] > 4.370):
-                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo " +str(round(datos[6] - 4.370, 3)) + " unidades. \n"
+                recomendacion += "Se puede bajar la proporción de lixiviado un poco para ahorrar ácido, habría que disminuirlo en " +str(round(datos[6] - 4.370, 3)) + " unidades. \n"
             else:
                 recomendacion += "No hay que modificar ningún valor, la pila va en camino a una recuperacion alta."
         

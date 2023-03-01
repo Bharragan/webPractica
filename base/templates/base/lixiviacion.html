@@ -64,7 +64,9 @@
             <form method="post" enctype="multipart/form-data" novalidate>
                <div class="form-group">
                   {% csrf_token %}
-                  {{ excelError }}
+                  {% if excelError %}
+                  <div class="alert alert-danger" role="alert">{{ excelError }}</div>
+                  {% endif %}
                   {{ excelForm.as_p }}
                   <button type="submit"  class="btn btn-primary" name="submit_excel">Predecir</button>
                </div>
